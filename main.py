@@ -1,10 +1,10 @@
-from morse import Morse
+from dictionary_morse import LANGUAGE
+from morse import Morse, InputData
+
 
 def main():
-    morse = Morse()
-    print("Example text: Мама мыла раму")
-    print("Example morse code: --. .-- --..-- _._._.")
-    print ("")
+    lang = InputData()
+    morse = Morse(lang.language)
     string = input("Please insert string for morse code or decode:")
     print(f"{string}")
     morse.morse_string = string

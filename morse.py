@@ -2,7 +2,25 @@
 import re
 from dictionary_morse import MORSE_DICT, LANGUAGE
 
+class InputData:
 
+    def __init__(self):
+        self.__language= self.choose_lang_terminal()
+    def choose_lang_terminal(self):
+        lang = ""
+        print("Example text: Мама мыла раму")
+        print("Example morse code: --. .-- --..-- _._._.")
+        print("")
+        while True:
+            lang = input(f"Please choose language from {LANGUAGE}(default is ru):")
+            lang = "ru" if not lang else lang
+            if lang in LANGUAGE:
+                break
+        return lang
+
+    @property
+    def language(self):
+        return self.__language
 class InsufficientAmount(Exception):
     '''Custom exception'''
     pass
@@ -16,6 +34,12 @@ class Morse:
         self.__coded = []
         self.__language = LANGUAGE.index(language)
 
+    @property
+    def lang(self):
+        return self.__language
+    @lang.setter
+    def lang(self, language):
+        self.__language = LANGUAGE.index(language)
 
     @property
     def morse_string(self):
@@ -50,8 +74,10 @@ class Morse:
                 return "morse"
 
         else:
-            all_possible_symbols =  [symbol[self.__language] for symbol in MORSE_DICT.values()]
+            all_possible_symbols =  [symbol[self.__language] for symbol in MORSE_DICT.values() if symbol[self.__language]]
             unsufficient_symbols = [symbol.upper() for symbol in string if symbol.upper() not in all_possible_symbols]
+
+            print(all_possible_symbols)
             print(f"Morse encode {unsufficient_symbols}")
             if not unsufficient_symbols :
                 return "text"
@@ -67,7 +93,7 @@ class Morse:
         dict_from_unique_symbols = dict.fromkeys(unique_symbols,"*")
 
         for key, each_element_dict in MORSE_DICT.items():
-            dict_from_unique_symbols[each_element_dict[0]] = key
+            dict_from_unique_symbols[each_element_dict[self.__language]] = key
 
         for element in self.__decoded.upper():
             self.__coded.append(dict_from_unique_symbols[element])
@@ -77,7 +103,7 @@ class Morse:
 
     def decode(self):
 
-        decoded = ''.join([MORSE_DICT.get(element)[0].lower() for element in self.__coded])
+        decoded = ''.join([MORSE_DICT.get(element)[self.__language].lower() for element in self.__coded])
 
         return decoded
 

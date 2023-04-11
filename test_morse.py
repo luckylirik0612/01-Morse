@@ -4,26 +4,35 @@ import pytest
 @pytest.fixture
 def translate():
     return Morse()
+
 @pytest.mark.decode
-@pytest.mark.parametrize("codes, decodes",
+@pytest.mark.parametrize("codes, decodes, lang",
                             [
-                                (["--",".-","--",".-","-----","--..--"], 'мама0,'),
-                                (["-----",".-","--",".-","-----","--..--"], '0ама0,'),
-                                ([".-",".-","--",".-","-----","--..--"], 'аама0,')
+                                (["--",".-","--",".-","-----","--..--"], 'мама0,', 'ru'),
+                                (["-----",".-","--",".-","-----","--..--"], '0ама0,', 'ru'),
+                                ([".-",".-","--",".-","-----","--..--"], 'аама0,', 'ru'),
+                                (["--","",".-"], "m a", "eng"),
                             ]
                          )
-def test_encoding(translate, codes, decodes):
+def test_encoding(translate, codes, decodes, lang):
+    translate.lang = lang
     translate.morse_string = decodes
     assert translate.morse_string == (codes, decodes), "Incorrect data"
+
 @pytest.mark.code
-@pytest.mark.parametrize("codes, decodes",
+@pytest.mark.parametrize("codes, decodes, lang",
                             [
-                                (["--",".-","--",".-","-----","--..--"], 'мама0,'),
-                                (["-----",".-","--",".-","-----","--..--"], '0ама0,'),
-                                ([".-",".-","--",".-","-----","--..--"], 'аама0,')
+                                (["--",".-","--",".-","-----","--..--"], 'мама0,', 'ru'),
+                                (["-----",".-","--",".-","-----","--..--"], '0ама0,', 'ru'),
+                                ([".-",".-","--",".-","-----","--..--"], 'аама0,', 'ru' ),
+                                (["--","",".-"], "m a", "eng"),
                             ]
                          )
-def test_decoding(translate, codes, decodes):
+
+
+
+def test_decoding(translate, codes, decodes, lang):
+    translate.lang = lang
     translate.morse_string = ' '.join(codes)
     assert translate.morse_string == (codes, decodes), "Incorrect data"
 
